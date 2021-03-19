@@ -1,4 +1,5 @@
 import PokemonDetails from './components/PokemonDetails';
+import EmptyDetails from './components/EmptyDetails';
 import SearchArea from './components/SearchArea';
 import React, { Component } from 'react';
 import axios from 'axios'
@@ -24,7 +25,8 @@ class App extends Component {
     return (<>
       <h1>Pokedex</h1>
       <SearchArea handleSubmit={this.handleSubmit} />
-      <PokemonDetails pokemon={this.state.pokemon} />
+      {this.state.pokemon ? <PokemonDetails pokemon={this.state.pokemon} /> : <EmptyDetails />}
+      
     </>
     );
   }

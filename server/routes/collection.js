@@ -23,11 +23,13 @@ collection.post("/catch/:name", async (req, res, next)=> {
 })
 
 collection.delete("/release/:id", (req, res)=>{
-  const idToDelete = Number(req.params.id);
+  const name = req.params.id;
+  const id = Number(name);
   const index = myCollection.findIndex((pokemon)=>{
-    return pokemon.id === idToDelete;
+    return pokemon.id === id || pokemon.name === name;
   })
   if(index === -1){
+    console.log(myCollection.map(pokemon => pokemon.name));
     throw "the pokemon isn't in your collection"
   }
   myCollection.splice(index, 1);

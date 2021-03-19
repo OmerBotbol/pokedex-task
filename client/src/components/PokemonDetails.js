@@ -6,29 +6,15 @@ class PokemonDetails extends Component {
     constructor(props){
         super(props)
         this.state = {
-            imgSrc:"",
+            imgSrc:this.props.pokemon.sprites.front,
             hover: false,
             catched: false,
         }
         this.switchImg = this.switchImg.bind(this)
     }
 
-    componentDidUpdate(){
-        if(this.state.imgSrc === "" && this.props.pokemon){
-            this.setState({imgSrc: this.props.pokemon.sprites.front})
-        }
+    componentDidMount() {
         this.pokemonInCollection();
-    }
-
-    renderEmpty() {
-        return (
-            <ul className="details">
-                <li>Name:</li>
-                <li>Height:</li>
-                <li>Weight:</li>
-                <li>Types: </li>
-            </ul>
-        );
     }
 
     switchImg() {
@@ -37,34 +23,42 @@ class PokemonDetails extends Component {
         }
         return this.setState({imgSrc: this.props.pokemon.sprites.back, hover: true});
     }
-    async pokemonInCollection(name) {
+
+    async pokemonInCollection() {
         const {data: collection} = await axios.get("/api/collection");
-        const isInCollection = collection.some(pokemon => pokemon.id === this.props.pokemon.id); 
+        console.log("collection: ", collection);
+        const isInCollection = collection.some(pokemon => pokemon.id === this.props.pokemon.id);
         this.setState({catched: isInCollection});
     }
 
+    async catch() {
+        await axios.post(`/api/collection/catch/${this.props.pokemon.name}`);
+        await this.pokemonInCollection();
+    }
+    async release() {
+        await axios.delete(`/api/collection/release/${this.props.pokemon.name}`);
+        await this.pokemonInCollection();
+    }
     async changePokemonLoction(name) {
-        if(this.state.catched){
-            axios.post(`/api/collection/catch/${name}`)
+        if(this.state.catched) {
+            await axios.delete(`/api/collection/release/${name}`)
         }
         else{
-            axios.delete(`/api/collection/release/${name}`)
+            await axios.post(`/api/collection/catch/${name}`)
         }
+        await this.pokemonInCollection();
     }
 
     render() {
-        if(this.props.pokemon) {
-            return (
-                <ul className="details">
-                    <li>Name: {this.props.pokemon.name}</li>
-                    <li>Height {this.props.pokemon.height}</li>
-                    <li>Weight: {this.props.pokemon.weight}</li>
-                    <li>Types: {this.props.pokemon.types.map((type, i)=><Type key={i} type={type}/>)}</li>
-                    <img src={this.state.imgSrc} alt={this.props.pokemon.name} onMouseEnter={()=>this.switchImg()} onMouseOut={()=>this.switchImg()}/>
-                    <button onClick={()=>{this.changePokemonLoction(this.props.pokemon.name)}}>{this.state.inCollection ? (<>Release</>) : (<>Catch</>)}</button>
-            </ul>);
-        } 
-        return this.renderEmpty();
+        return (
+            <ul className="details">
+                <li>Name: {this.props.pokemon.name}</li>
+                <li>Height {this.props.pokemon.height}</li>
+                <li>Weight: {this.props.pokemon.weight}</li>
+                <li>Types: {this.props.pokemon.types.map((type, i)=><Type key={i} type={type}/>)}</li>
+                <img src={this.state.imgSrc} alt={this.props.pokemon.name} onMouseEnter={()=>this.switchImg()} onMouseOut={()=>this.switchImg()}/>
+                <button onClick={()=>{this.state.catched ? this.release() : this.catch()}}>{this.state.catched ? "Release" : "Catch"}</button>
+        </ul>);
     }
 }
 
