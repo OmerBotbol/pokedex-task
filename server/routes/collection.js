@@ -8,10 +8,17 @@ collection.get("/", (req, res) => {
 
 });
 
-collection.post("/catch", (req, res)=>{
-  const {body} = req;
-  myCollection.push(body)
-  res.send({success: true})
+collection.post("/catch/:name", async (req, res, next)=> {
+  const {name} = req.params;
+  try {
+    const pokemon = await getPokemon(name);
+    const isPokemonInCollection = myCollection.some(catchedPokemon => catchedPokemon.id === pokemon.id);
+    if (!isPokemonInCollection) myCollection.push(pokemon);
+    res.send({success: true});
+  }
+  catch (error) {
+    next(error);
+  }
 })
 
 collection.delete("/release/:id", (req, res)=>{
@@ -23,7 +30,7 @@ collection.delete("/release/:id", (req, res)=>{
     throw "the pokemon isn't in your collection"
   }
   myCollection.splice(index, 1);
-  res.send({success: true})
+  res.status(204).send({success: true});
 
 })
 
