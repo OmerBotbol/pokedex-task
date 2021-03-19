@@ -7,7 +7,7 @@ class App extends Component {
   constructor(props){
     super(props)
     this.state ={
-      pokemon: '',
+      pokemon: null,
       name: ''
     }
     this.handleSubmit = this.handleSubmit.bind(this)
