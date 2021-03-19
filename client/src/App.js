@@ -12,14 +12,12 @@ class App extends Component {
     }
     this.handleSubmit = this.handleSubmit.bind(this)
   }
-  componentDidUpdate(){
-    axios.get(`/api/pokemon/${this.state.name}`).then((pokemonDetails)=>{
-      this.setState({pokemon: pokemonDetails.data})
-    })
-  }
   
   handleSubmit(pokemonName){
     this.setState({name: pokemonName})
+    axios.get(`/api/pokemon/${pokemonName}`).then((pokemonDetails)=>{
+      this.setState({pokemon: pokemonDetails.data})
+    })
   }
   
   render() {
