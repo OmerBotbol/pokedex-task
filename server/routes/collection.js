@@ -1,4 +1,5 @@
 const { Router } = require("express");
+const {getPokemon} = require("../utils/pokeAPI")
 
 const collection = Router();
 const myCollection = []

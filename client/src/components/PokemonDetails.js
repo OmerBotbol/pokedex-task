@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import Type from './Type'
+import axios from 'axios'
 
 class PokemonDetails extends Component {
     constructor(props){
         super(props)
         this.state = {
             imgSrc:"",
-            hover: false
+            hover: false,
+            catched: false,
         }
         this.switchImg = this.switchImg.bind(this)
     }
@@ -15,6 +17,7 @@ class PokemonDetails extends Component {
         if(this.state.imgSrc === "" && this.props.pokemon){
             this.setState({imgSrc: this.props.pokemon.sprites.front})
         }
+        this.pokemonInCollection();
     }
 
     renderEmpty() {
@@ -34,6 +37,21 @@ class PokemonDetails extends Component {
         }
         return this.setState({imgSrc: this.props.pokemon.sprites.back, hover: true});
     }
+    async pokemonInCollection(name) {
+        const {data: collection} = await axios.get("/api/collection");
+        const isInCollection = collection.some(pokemon => pokemon.id === this.props.pokemon.id); 
+        this.setState({catched: isInCollection});
+    }
+
+    async changePokemonLoction(name) {
+        if(this.state.catched){
+            axios.post(`/api/collection/catch/${name}`)
+        }
+        else{
+            axios.delete(`/api/collection/release/${name}`)
+        }
+    }
+
     render() {
         if(this.props.pokemon) {
             return (
@@ -43,6 +61,7 @@ class PokemonDetails extends Component {
                     <li>Weight: {this.props.pokemon.weight}</li>
                     <li>Types: {this.props.pokemon.types.map((type, i)=><Type key={i} type={type}/>)}</li>
                     <img src={this.state.imgSrc} alt={this.props.pokemon.name} onMouseEnter={()=>this.switchImg()} onMouseOut={()=>this.switchImg()}/>
+                    <button onClick={()=>{this.changePokemonLoction(this.props.pokemon.name)}}>{this.state.inCollection ? (<>Release</>) : (<>Catch</>)}</button>
             </ul>);
         } 
         return this.renderEmpty();
