@@ -9,9 +9,11 @@ class App extends Component {
     super(props)
     this.state ={
       pokemon: null,
-      name: ''
+      name: '',
+      pokemonsOfType: [],
     }
     this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleTypeList = this.handleTypeList.bind(this)
   }
   
   handleSubmit(pokemonName){
@@ -21,12 +23,23 @@ class App extends Component {
     })
   }
   
+  handleTypeList(type) {
+    axios.get(`/api/type/${type}`)
+    .then(res => {
+      this.setState({pokemonsOfType: res.data.pokemons});
+    });
+    
+  }
+
   render() {
+    console.log(this.state.pokemonsOfType);
     return (<>
       <h1>Pokedex</h1>
       <SearchArea handleSubmit={this.handleSubmit} />
-      {this.state.pokemon ? <PokemonDetails pokemon={this.state.pokemon} /> : <EmptyDetails />}
-      
+      {this.state.pokemon ? <PokemonDetails showType={this.handleTypeList} pokemon={this.state.pokemon} /> : <EmptyDetails />}
+      <ul>
+        {this.state.pokemonsOfType.map(pokemon => <li>{pokemon}</li>)}
+      </ul>
     </>
     );
   }

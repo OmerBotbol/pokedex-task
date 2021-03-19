@@ -55,7 +55,7 @@ class PokemonDetails extends Component {
                 <li>Name: {this.props.pokemon.name}</li>
                 <li>Height {this.props.pokemon.height}</li>
                 <li>Weight: {this.props.pokemon.weight}</li>
-                <li>Types: {this.props.pokemon.types.map((type, i)=><Type key={i} type={type}/>)}</li>
+                <li>Types: {this.props.pokemon.types.map((type, i)=><Type key={i} showType={()=>this.props.showType(type)} type={type}/>)}</li>
                 <img src={this.state.imgSrc} alt={this.props.pokemon.name} onMouseEnter={()=>this.switchImg()} onMouseOut={()=>this.switchImg()}/>
                 <button onClick={()=>{this.state.catched ? this.release() : this.catch()}}>{this.state.catched ? "Release" : "Catch"}</button>
         </ul>);

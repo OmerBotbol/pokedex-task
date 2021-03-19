@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 
 class Type extends Component {
+    constructor(props) {
+        super(props);
+    }
     render() {
         return (
-            <span>{`${this.props.type} `}</span>
+            <span onClick={this.props.showType}>{`${this.props.type} `}</span>
         );
     }
 }
