@@ -12,6 +12,7 @@ class App extends Component {
       pokemon: null,
       name: '',
       pokemonsOfType: [],
+      isTypeListLoading: false,
     }
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleTypeList = this.handleTypeList.bind(this)
@@ -26,9 +27,11 @@ class App extends Component {
   }
   
   handleTypeList(type) {
+    this.setState({isTypeListLoading: true})
     axios.get(`/api/type/${type}`)
     .then(res => {
       this.setState({pokemonsOfType: res.data.pokemons});
+      this.setState({isTypeListLoading: false});
     });
     
   }
@@ -38,7 +41,7 @@ class App extends Component {
       <h1>Pokedex</h1>
       <SearchArea handleSubmit={this.handleSubmit} />
       {this.state.pokemon ? <PokemonDetails showType={this.handleTypeList} pokemon={this.state.pokemon} /> : <EmptyDetails />}
-      <PokemonList pokemons={this.state.pokemonsOfType} handleSubmit={this.handleSubmit}/>
+      {this.state.isTypeListLoading ? <div>LOADING</div> : <PokemonList pokemons={this.state.pokemonsOfType} handleSubmit={this.handleSubmit}/>}
       
     </>
     );

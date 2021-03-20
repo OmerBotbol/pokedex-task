@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import axios from 'axios';
 
 class PokemonPreview extends Component {
     constructor(props){
@@ -8,19 +7,13 @@ class PokemonPreview extends Component {
             pokemonImage: ''
         }
     }
-    
-    componentDidMount() {
-        axios.get(`/api/pokemon/${this.props.pokemon}`).then((pokemon)=>{
-            this.setState({pokemonImage: pokemon.data.sprites.smallSprite})
-        })
-    }
 
     
     render() {
         return (
-            <li className="pokemon-preview" onClick={()=>this.props.handleSubmit(this.props.pokemon)}>
-            {this.props.pokemon}
-            <img src={this.state.pokemonImage} alt="" />
+            <li className="pokemon-preview" onClick={()=>this.props.handleSubmit(this.props.pokemon.name)}>
+            {this.props.pokemon.name}
+            <img src={this.props.pokemon.imgSrc} alt="" />
         </li>
         )
     }
