@@ -20,23 +20,21 @@ class App extends Component {
     }
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleTypeList = this.handleTypeList.bind(this)
+    this.pokemonInCollection = this.pokemonInCollection.bind(this) 
   }
   async pokemonInCollection(pokemonName) {
     return axios.get("/api/collection")
-    .then(({data: collection}) => collection.some(pokemon => pokemon.name === pokemonName));
+    .then(({data: collection}) => collection.some(pokemon => pokemon.name === pokemonName))
+    .then(catchStatus => this.setState({catched: catchStatus}));
 }
   async handleSubmit(pokemonName) {
     axios.get(`/api/pokemon/${pokemonName}`)
     .then((pokemonDetails) => {
-      console.log(pokemonDetails.data)
-      this.pokemonInCollection(pokemonName)
-      .then(catched => {
-          this.setState({
-            pokemon: pokemonDetails.data,
-            pokemonsOfType: [],
-            catched,
-          });
-        });
+      this.setState({
+        pokemon: pokemonDetails.data,
+        pokemonsOfType: [],
+      });
+      this.pokemonInCollection(pokemonName);
     });
   }
   
@@ -59,7 +57,13 @@ class App extends Component {
           <Collection /> :
           <>
             <SearchArea handleSubmit={this.handleSubmit} />
-            {this.state.pokemon ? <PokemonDetails showType={this.handleTypeList} pokemon={this.state.pokemon} catched={this.state.catched}/> : <EmptyDetails />}
+            {this.state.pokemon ? 
+              <PokemonDetails 
+                showType={this.handleTypeList}
+                pokemon={this.state.pokemon}
+                catched={this.state.catched}
+                checkCatch={() => this.pokemonInCollection(this.state.pokemon.name)}/> : 
+              <EmptyDetails />}
             {this.state.isTypeListLoading ? <Loading /> : <PokemonList pokemons={this.state.pokemonsOfType} handleSubmit={this.handleSubmit}/>}
           </>
       }

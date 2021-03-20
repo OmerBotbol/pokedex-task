@@ -35,20 +35,11 @@ class PokemonDetails extends Component {
 
     async catch() {
         await axios.post(`/api/collection/catch/${this.props.pokemon.name}`);
-        await this.pokemonInCollection();
+        this.props.checkCatch();
     }
     async release() {
         await axios.delete(`/api/collection/release/${this.props.pokemon.name}`);
-        await this.pokemonInCollection();
-    }
-    async changePokemonLoction(name) {
-        if(this.state.catched) {
-            await axios.delete(`/api/collection/release/${name}`)
-        }
-        else{
-            await axios.post(`/api/collection/catch/${name}`)
-        }
-        await this.pokemonInCollection();
+        this.props.checkCatch();
     }
 
     render() {
