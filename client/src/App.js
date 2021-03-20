@@ -49,7 +49,7 @@ class App extends Component {
     .then(res => {
       this.setState({isTypeListLoading: false, error: '', pokemonsOfType: res.data.pokemons});
     })
-    .catch(()=>this.setState({error: "can't find this type"}));
+    .catch(()=>this.setState({error: "can't find this type", isTypeListLoading: false}));
     
   }
 
