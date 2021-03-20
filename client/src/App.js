@@ -16,7 +16,8 @@ class App extends Component {
       pokemonsOfType: [],
       isTypeListLoading: false,
       collectionView: false,
-      catched: false
+      catched: false,
+      error: ''
     }
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleTypeList = this.handleTypeList.bind(this)
@@ -25,7 +26,8 @@ class App extends Component {
   async pokemonInCollection(pokemonName) {
     return axios.get("/api/collection")
     .then(({data: collection}) => collection.some(pokemon => pokemon.name === pokemonName))
-    .then(catchStatus => this.setState({catched: catchStatus}));
+    .then(catchStatus => this.setState({catched: catchStatus, error: ''}))
+    .catch(()=>this.setState({error: "can't find your collection"}));
 }
   async handleSubmit(pokemonName) {
     axios.get(`/api/pokemon/${pokemonName}`)
@@ -33,18 +35,21 @@ class App extends Component {
       this.setState({
         pokemon: pokemonDetails.data,
         pokemonsOfType: [],
+        error: ''
       });
       this.pokemonInCollection(pokemonName);
-    });
+    }).catch(()=>{
+      this.setState({error: "pokemon wasn't found"})
+    })
   }
   
   handleTypeList(type) {
     this.setState({isTypeListLoading: true})
     axios.get(`/api/type/${type}`)
     .then(res => {
-      this.setState({pokemonsOfType: res.data.pokemons});
-      this.setState({isTypeListLoading: false});
-    });
+      this.setState({isTypeListLoading: false, error: '', pokemonsOfType: res.data.pokemons});
+    })
+    .catch(()=>this.setState({error: "can't find this type"}));
     
   }
 
@@ -54,9 +59,10 @@ class App extends Component {
       <button onClick={() => this.setState({collectionView: !this.state.collectionView})}>collection</button>
       {
         this.state.collectionView ? 
-          <Collection /> :
-          <>
+        <Collection /> :
+        <>
             <SearchArea handleSubmit={this.handleSubmit} />
+            <div>{this.state.error}</div>
             {this.state.pokemon ? 
               <PokemonDetails 
                 showType={this.handleTypeList}
