@@ -12,11 +12,17 @@ class PokemonDetails extends Component {
         }
         this.switchImg = this.switchImg.bind(this)
     }
-
+    
     componentDidMount() {
         this.pokemonInCollection();
     }
 
+    componentDidUpdate(){
+        if(this.state.imgSrc !== this.props.pokemon.sprites.front && this.state.imgSrc !== this.props.pokemon.sprites.back){
+            this.setState({imgSrc: this.props.pokemon.sprites.front})
+        }
+    }
+    
     switchImg() {
         if(this.state.hover) {
             return this.setState({imgSrc: this.props.pokemon.sprites.front, hover: false});

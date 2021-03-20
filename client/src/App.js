@@ -3,6 +3,7 @@ import EmptyDetails from './components/EmptyDetails';
 import SearchArea from './components/SearchArea';
 import React, { Component } from 'react';
 import axios from 'axios'
+import PokemonList from './components/PokemonList';
 
 class App extends Component {
   constructor(props){
@@ -19,7 +20,7 @@ class App extends Component {
   handleSubmit(pokemonName){
     this.setState({name: pokemonName})
     axios.get(`/api/pokemon/${pokemonName}`).then((pokemonDetails)=>{
-      this.setState({pokemon: pokemonDetails.data})
+      this.setState({pokemon: pokemonDetails.data, pokemonsOfType: []})
     })
   }
   
@@ -32,13 +33,12 @@ class App extends Component {
   }
 
   render() {
-    console.log(this.state.pokemonsOfType);
     return (<>
       <h1>Pokedex</h1>
       <SearchArea handleSubmit={this.handleSubmit} />
       {this.state.pokemon ? <PokemonDetails showType={this.handleTypeList} pokemon={this.state.pokemon} /> : <EmptyDetails />}
       <ul>
-        {this.state.pokemonsOfType.map(pokemon => <li>{pokemon}</li>)}
+        {this.state.pokemonsOfType.map((pokemon, i) => <PokemonList key={i} pokemon={pokemon} handleSubmit={this.handleSubmit}/>)}
       </ul>
     </>
     );
