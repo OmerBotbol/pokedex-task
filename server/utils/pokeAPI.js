@@ -16,6 +16,7 @@ async function getPokemon(name) {
             sprites: {
                 front: pokemon.sprites.front_default,
                 back: pokemon.sprites.back_default,
+                smallSprite: pokemon.sprites.versions["generation-viii"].icons.front_default
             }
         }
         return pokemonData
@@ -29,10 +30,17 @@ async function getType(type) {
     try{
         const response = await axios.get(`${POKEAPI_BASE_URL}/type/${type}`);
         const typeResponse = response.data;
+        const pokemons = typeResponse.pokemon.map( element => {
+            return getPokemon(element.pokemon.name)
+            .then(pokemon => {
+                return {name: pokemon.name, imgSrc: pokemon.sprites.smallSprite};
+            })
+            
+        })
         const typeData = {
             id: typeResponse.id,
             name: typeResponse.name,
-            pokemons: typeResponse.pokemon.map((element)=> element.pokemon.name),
+            pokemons: await Promise.all(pokemons),
         }
         return typeData
     }
