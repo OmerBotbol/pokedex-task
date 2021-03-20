@@ -12,12 +12,8 @@ class PokemonDetails extends Component {
         }
         this.switchImg = this.switchImg.bind(this)
     }
-    
-    componentDidMount() {
-        this.pokemonInCollection();
-    }
 
-    componentDidUpdate(){
+    componentDidUpdate() {
         if(this.state.imgSrc !== this.props.pokemon.sprites.front && this.state.imgSrc !== this.props.pokemon.sprites.back){
             this.setState({imgSrc: this.props.pokemon.sprites.front})
         }
@@ -63,7 +59,7 @@ class PokemonDetails extends Component {
                 <li>Weight: {this.props.pokemon.weight}</li>
                 <li>Types: {this.props.pokemon.types.map((type, i)=><Type key={i} showType={()=>this.props.showType(type)} type={type}/>)}</li>
                 <img src={this.state.imgSrc} alt={this.props.pokemon.name} onMouseEnter={()=>this.switchImg()} onMouseOut={()=>this.switchImg()}/>
-                <button onClick={()=>{this.state.catched ? this.release() : this.catch()}}>{this.state.catched ? "Release" : "Catch"}</button>
+                <button onClick={()=>{this.props.catched ? this.release() : this.catch()}}>{this.props.catched ? "Release" : "Catch"}</button>
         </ul>);
     }
 }

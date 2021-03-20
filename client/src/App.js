@@ -5,6 +5,7 @@ import React, { Component } from 'react';
 import axios from 'axios'
 import PokemonList from './components/PokemonList';
 import Loading from './components/Loading';
+import Collection from './components/Collection';
 
 class App extends Component {
   constructor(props){
@@ -14,17 +15,29 @@ class App extends Component {
       name: '',
       pokemonsOfType: [],
       isTypeListLoading: false,
+      collectionView: false,
+      catched: false
     }
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleTypeList = this.handleTypeList.bind(this)
   }
-  
-  handleSubmit(pokemonName){
-    this.setState({name: pokemonName})
-    axios.get(`/api/pokemon/${pokemonName}`).then((pokemonDetails)=>{
+  async pokemonInCollection(pokemonName) {
+    return axios.get("/api/collection")
+    .then(({data: collection}) => collection.some(pokemon => pokemon.name === pokemonName));
+}
+  async handleSubmit(pokemonName) {
+    axios.get(`/api/pokemon/${pokemonName}`)
+    .then((pokemonDetails) => {
       console.log(pokemonDetails.data)
-      this.setState({pokemon: pokemonDetails.data, pokemonsOfType: []})
-    })
+      this.pokemonInCollection(pokemonName)
+      .then(catched => {
+          this.setState({
+            pokemon: pokemonDetails.data,
+            pokemonsOfType: [],
+            catched,
+          });
+        });
+    });
   }
   
   handleTypeList(type) {
@@ -40,10 +53,16 @@ class App extends Component {
   render() {
     return (<>
       <h1>Pokedex</h1>
-      <SearchArea handleSubmit={this.handleSubmit} />
-      {this.state.pokemon ? <PokemonDetails showType={this.handleTypeList} pokemon={this.state.pokemon} /> : <EmptyDetails />}
-      {this.state.isTypeListLoading ? <Loading /> : <PokemonList pokemons={this.state.pokemonsOfType} handleSubmit={this.handleSubmit}/>}
-      
+      <button onClick={() => this.setState({collectionView: !this.state.collectionView})}>collection</button>
+      {
+        this.state.collectionView ? 
+          <Collection /> :
+          <>
+            <SearchArea handleSubmit={this.handleSubmit} />
+            {this.state.pokemon ? <PokemonDetails showType={this.handleTypeList} pokemon={this.state.pokemon} catched={this.state.catched}/> : <EmptyDetails />}
+            {this.state.isTypeListLoading ? <Loading /> : <PokemonList pokemons={this.state.pokemonsOfType} handleSubmit={this.handleSubmit}/>}
+          </>
+      }
     </>
     );
   }
