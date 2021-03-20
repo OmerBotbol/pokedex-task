@@ -16,6 +16,7 @@ async function getPokemon(name) {
             sprites: {
                 front: pokemon.sprites.front_default,
                 back: pokemon.sprites.back_default,
+                smallSprite: pokemon.sprites.versions["generation-viii"].icons.front_default
             }
         }
         return pokemonData
