@@ -4,6 +4,7 @@ import SearchArea from './components/SearchArea';
 import React, { Component } from 'react';
 import axios from 'axios'
 import PokemonList from './components/PokemonList';
+import Loading from './components/Loading';
 
 class App extends Component {
   constructor(props){
@@ -41,7 +42,7 @@ class App extends Component {
       <h1>Pokedex</h1>
       <SearchArea handleSubmit={this.handleSubmit} />
       {this.state.pokemon ? <PokemonDetails showType={this.handleTypeList} pokemon={this.state.pokemon} /> : <EmptyDetails />}
-      {this.state.isTypeListLoading ? <div>LOADING</div> : <PokemonList pokemons={this.state.pokemonsOfType} handleSubmit={this.handleSubmit}/>}
+      {this.state.isTypeListLoading ? <Loading /> : <PokemonList pokemons={this.state.pokemonsOfType} handleSubmit={this.handleSubmit}/>}
       
     </>
     );
