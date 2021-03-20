@@ -70,7 +70,7 @@ class App extends Component {
                 catched={this.state.catched}
                 checkCatch={() => this.pokemonInCollection(this.state.pokemon.name)}/> : 
               <EmptyDetails />}
-            {this.state.isTypeListLoading ? <Loading /> : <PokemonList pokemons={this.state.pokemonsOfType} handleSubmit={this.handleSubmit}/>}
+            {this.state.isTypeListLoading && this.state.error === ''? <Loading /> : <PokemonList pokemons={this.state.pokemonsOfType} handleSubmit={this.handleSubmit}/>}
           </>
       }
     </>
