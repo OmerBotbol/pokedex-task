@@ -6,6 +6,7 @@ import axios from 'axios'
 import PokemonList from './components/PokemonList';
 import Loading from './components/Loading';
 import Collection from './components/Collection';
+import './styles/App.css'
 
 class App extends Component {
   constructor(props){
@@ -56,11 +57,11 @@ class App extends Component {
   render() {
     return (<>
       <h1>Pokedex</h1>
-      <button onClick={() => this.setState({collectionView: !this.state.collectionView})}>collection</button>
+      <button className="collection-button" onClick={() => this.setState({collectionView: !this.state.collectionView})}>collection</button>
       {
         this.state.collectionView ? 
         <Collection /> :
-        <>
+        <div id="search-section">
             <SearchArea handleSubmit={this.handleSubmit} />
             <div>{this.state.error}</div>
             {this.state.pokemon ? 
@@ -71,7 +72,7 @@ class App extends Component {
                 checkCatch={() => this.pokemonInCollection(this.state.pokemon.name)}/> : 
               <EmptyDetails />}
             {this.state.isTypeListLoading && this.state.error === ''? <Loading /> : <PokemonList pokemons={this.state.pokemonsOfType} handleSubmit={this.handleSubmit}/>}
-          </>
+          </div>
       }
     </>
     );

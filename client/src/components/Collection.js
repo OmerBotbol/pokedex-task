@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios';
+import "../styles/Collection.css"
 
 export default class Collection extends Component {
     constructor(props) {
@@ -19,7 +20,12 @@ export default class Collection extends Component {
         return (
             <div className="collection-pokemon">
                 <ul>
-                    {this.state.collection.map((pokemon, i) => <li key={i}>{pokemon.name}</li>)}
+                    {this.state.collection.map((pokemon, i) => {
+                    return <li key={i}>
+                        {pokemon.name}
+                        <img src={pokemon.sprites.smallSprite} alt=""/>
+                        </li>
+                    })}
                 </ul>
             </div>
         )

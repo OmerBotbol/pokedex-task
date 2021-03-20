@@ -1,0 +1,15 @@
+.collection-pokemon{
+    background-color: #73a8cc;
+    border: black 1px solid;
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 10px;
+    width: 30%;
+    min-height: 70vh;
+}
+ul{
+    list-style: none;
+}
