@@ -9,11 +9,11 @@ function PokemonDetails(props) {
             catched: false,
         });
 
-    useEffect(() => {
-        if(state.imgSrc !== props.pokemon.sprites.front && state.imgSrc !== props.pokemon.sprites.back){
-            setState({imgSrc: props.pokemon.sprites.front})
-        }
-    });
+    // useEffect(() => {
+    //     if(state.imgSrc !== props.pokemon.sprites.front && state.imgSrc !== props.pokemon.sprites.back){
+    //         setState({imgSrc: props.pokemon.sprites.front})
+    //     }
+    // }, []);
     
     function switchImg() {
         if(state.hover) {
