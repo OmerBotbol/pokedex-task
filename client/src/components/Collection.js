@@ -1,33 +1,29 @@
-import React, { Component } from 'react'
+import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import "../styles/Collection.css"
 
-export default class Collection extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            collection: [],
-        }
-    }
+function Collection(props) {
+    const [state, setState] = useState({
+        collection: [],
+    });
 
-    componentDidMount() {
+    useEffect(() => {
         axios.get("/api/collection")
-        .then( ({data}) => this.setState({collection: data}));  
-    }
+        .then( ({data}) => setState({collection: data}));  
+    }, []);
 
-    render() {
-        
-        return (
-            <div className="collection-pokemon">
-                <ul>
-                    {this.state.collection.map((pokemon, i) => {
-                    return <li key={i}>
-                        {pokemon.name}
-                        <img src={pokemon.sprites.smallSprite} alt=""/>
-                        </li>
-                    })}
-                </ul>
-            </div>
-        )
-    }
+    return (
+        <div className="collection-pokemon">
+            <ul>
+                {state.collection.map((pokemon, i) => {
+                return <li key={i}>
+                    {pokemon.name}
+                    <img src={pokemon.sprites.smallSprite} alt=""/>
+                    </li>
+                })}
+            </ul>
+        </div>
+    );
 }
+
+export default Collection

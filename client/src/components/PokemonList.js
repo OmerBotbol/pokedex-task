@@ -1,16 +1,12 @@
 
-import React, { Component } from 'react';
 import PokemonPreview from './PokemonPreview';
 
-class PokemonList extends Component {
-    
-    render() {
-        return (
-            <ul>
-                {this.props.pokemons.map((pokemon, i) =><PokemonPreview key ={i} pokemon={pokemon} handleSubmit={this.props.handleSubmit}/>)}
-            </ul>
-        );
-    }
+function PokemonList(props) {
+    return (
+        <ul>
+            {props.pokemons.map((pokemon, i) =><PokemonPreview key ={i} pokemon={pokemon} handleSubmit={props.handleSubmit}/>)}
+        </ul>
+    );
 }
 
 export default PokemonList;
