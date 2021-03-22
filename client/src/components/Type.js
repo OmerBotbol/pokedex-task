@@ -1,11 +1,7 @@
-import React, { Component } from 'react';
-
-class Type extends Component {
-    render() {
-        return (
-            <span onClick={this.props.showType}>{`${this.props.type} `}</span>
-        );
-    }
+function Type(props) {
+    return (
+        <span onClick={props.showType}>{`${props.type} `}</span>
+    );
 }
 
 export default Type;
